@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<con:soapui-project id="ede0d5a0-5a01-45e2-ade6-1b944a9bf213" activeEnvironment="Default" name="REST Project 3" soapui-version="5.7.0" abortOnError="false" runType="SEQUENTIAL" resourceRoot="" xmlns:con="http://eviware.com/soapui/config"><con:settings/><con:interface xsi:type="con:RestService" id="aa1ac782-9cac-48d9-a707-d5bf7314a7cd" wadlVersion="http://wadl.dev.java.net/2009/02" name="https://restcountries.com" type="rest" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"><con:settings/><con:definitionCache/><con:endpoints><con:endpoint>https://restcountries.com</con:endpoint></con:endpoints><con:resource name="Lkr" path="/v3.1/currency/lkr" id="adb44179-f0a0-4196-9867-8ae70af5e66e"><con:settings/><con:parameters/><con:method name="Lkr 1" id="a2053e7f-ebdc-4cdc-b9d1-d483e2cc030a" method="GET"><con:settings/><con:parameters/><con:representation type="RESPONSE"><con:mediaType>application/json</con:mediaType><con:status>200</con:status><con:params/><con:element>Response</con:element></con:representation><con:request name="Request 1" id="dcfc01f4-da96-4948-bf07-9404d99ef005" mediaType="application/json"><con:settings><con:setting id="com.eviware.soapui.impl.wsdl.WsdlRequest@request-headers">&lt;xml-fragment/></con:setting></con:settings><con:endpoint>https://restcountries.com</con:endpoint><con:request/><con:originalUri>https://restcountries.com/v3.1/currency/lkr</con:originalUri><con:credentials><con:authType>No Authorization</con:authType></con:credentials><con:jmsConfig JMSDeliveryMode="PERSISTENT"/><con:jmsPropertyConfig/><con:parameters/></con:request></con:method></con:resource></con:interface><con:testSuite id="a972c5bf-85f6-4447-8111-e280be3decb7" name="TestSuite 1"><con:settings/><con:runType>SEQUENTIAL</con:runType><con:testCase id="97fd8321-b93f-4365-9e35-8074b6c25390" failOnError="true" failTestCaseOnErrors="true" keepSession="false" maxResults="0" name="getResponse" searchProperties="true"><con:settings/><con:testStep type="restrequest" name="getR" id="d1daec3a-3fcc-4134-b363-34654cadc8db"><con:settings/><con:config service="https://restcountries.com" resourcePath="/v3.1/currency/lkr" methodName="Lkr 1" xsi:type="con:RestRequestStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"><con:restRequest name="getR" id="dcfc01f4-da96-4948-bf07-9404d99ef005" mediaType="application/json"><con:settings><con:setting id="com.eviware.soapui.impl.wsdl.WsdlRequest@request-headers">&lt;xml-fragment/></con:setting></con:settings><con:endpoint>https://restcountries.com</con:endpoint><con:request/><con:originalUri>https://restcountries.com/v3.1/currency/lkr</con:originalUri><con:credentials><con:authType>No Authorization</con:authType></con:credentials><con:jmsConfig JMSDeliveryMode="PERSISTENT"/><con:jmsPropertyConfig/><con:parameters/></con:restRequest></con:config></con:testStep><con:testStep type="groovy" name="Groovy Script" id="e7e5efdf-6559-4e8f-b083-f01adfeedbb5"><con:settings/><con:config><script>import groovy.json.JsonSlurper
+//excel code to fetch currency code from excel
+import jxl.*
+import jxl.write.*
+Workbook work = Workbook.getWorkbook(new File ("C:\\Book1.xls"));
+Sheet sh =work.getSheet(0)
+
+Cell var = sh.getCell(0,0);
+
+testRunner.testCase.testSuite.project.setPropertyValue("currency",var.getContents())
+
+work.close();
+def tCase = testRunner.testCase.testSuite.testCases["getResponse"]
+def ctest = tCase.testSteps["getR"]
+ctest.run(testRunner,context)
+def addDetails = ctest.testRequest.response.responseContent
+def jsonSlurper = new JsonSlurper()
+def object = jsonSlurper.parseText(addDetails)
+log.info(object.capital[0][0])
+if(object.capital ==("Colombo")){
+log.info"Pass"
+}
+else{
+log.info"API-Fail"
+}</script></con:config></con:testStep><con:properties/></con:testCase><con:properties/></con:testSuite><con:properties><con:property><con:name>currency</con:name><con:value>lkr</con:value></con:property></con:properties><con:wssContainer/><con:oAuth2ProfileContainer/><con:oAuth1ProfileContainer/><con:sensitiveInformation/></con:soapui-project>
